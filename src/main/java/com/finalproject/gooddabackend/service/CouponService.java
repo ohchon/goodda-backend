@@ -120,6 +120,7 @@ public class CouponService {
         String couponBrand = couponUpdateRequestDto.getCouponBrand();
         String couponTitle = couponUpdateRequestDto.getCouponTitle();
         String couponSubTitle = couponUpdateRequestDto.getCouponSubTitle();
+        String couponImage = editCoupon.getCouponImage(); // 안했을떄를 대비
         String couponLogo = couponUpdateRequestDto.getCouponLogo();
         String couponType = couponUpdateRequestDto.getCouponType();
         String couponDesc = couponUpdateRequestDto.getCouponDesc();
@@ -127,20 +128,33 @@ public class CouponService {
         LocalDate couponCreate = couponUpdateRequestDto.getCouponCreate();
         LocalDate couponDespire = couponUpdateRequestDto.getCouponDespire();
         //기존에 S3에 있는 사진 삭제하기기
-        if (couponUpdateRequestDto.getCouponImage() != null) {
+//        if (couponUpdateRequestDto.getCouponImage() != null) {
+//            //사진도 함께 업데이트 하는 경우: 기존사진 삭제후 업로드
+////            Coupon foundCoupon = couponRepository.findById(couponId).orElseThrow(
+////                    () -> new CustomErrorException("해당 쿠폰을 찾을 수 없어 수정할 수 없습니다."));
+//            //deleteS3(foundCoupon.getCouponImage()); //지우고 넣고 싶지만 안돼서 S3에 있는것은 냅두고 그 위에 올리기
+//            String couponImage = s3Uploader.upload(couponUpdateRequestDto.getCouponImage(), "image");
+//            editCoupon.updateCoupon(couponBrand, couponTitle, couponSubTitle, couponImage, couponLogo, couponType, couponDesc, couponUrl, couponCreate, couponDespire);
+//            return new ResponseDto("success", "수정성공");
+//        } else {
+//            String couponImage = editCoupon.getCouponImage();
+//            editCoupon.updateCoupon(couponBrand, couponTitle, couponSubTitle, couponImage, couponLogo, couponType, couponDesc, couponUrl, couponCreate, couponDespire);
+//
+//            return new ResponseDto("success", "수정성공");
+//        }
+        //기존에 S3에 있는 사진 삭제하기기
+        if(couponUpdateRequestDto.getCouponImage() instanceof MultipartFile){
             //사진도 함께 업데이트 하는 경우: 기존사진 삭제후 업로드
 //            Coupon foundCoupon = couponRepository.findById(couponId).orElseThrow(
 //                    () -> new CustomErrorException("해당 쿠폰을 찾을 수 없어 수정할 수 없습니다."));
             //deleteS3(foundCoupon.getCouponImage()); //지우고 넣고 싶지만 안돼서 S3에 있는것은 냅두고 그 위에 올리기
-            String couponImage = s3Uploader.upload(couponUpdateRequestDto.getCouponImage(), "image");
-            editCoupon.updateCoupon(couponBrand, couponTitle, couponSubTitle, couponImage, couponLogo, couponType, couponDesc, couponUrl, couponCreate, couponDespire);
-            return new ResponseDto("success", "수정성공");
-        } else {
-            String couponImage = editCoupon.getCouponImage();
-            editCoupon.updateCoupon(couponBrand, couponTitle, couponSubTitle, couponImage, couponLogo, couponType, couponDesc, couponUrl, couponCreate, couponDespire);
-
-            return new ResponseDto("success", "수정성공");
+            couponImage = s3Uploader.upload(couponUpdateRequestDto.getCouponImage(), "image");
+            if(couponImage == null) throw new CustomErrorException("이미지 업르드에 실패하였습니다");
         }
+        editCoupon.updateCoupon(couponBrand, couponTitle, couponSubTitle, couponImage, couponLogo, couponType, couponDesc, couponUrl, couponCreate, couponDespire);
+
+        return new ResponseDto("success", "수정성공");
+
     }
 
     public ResponseDto showList(Long userId, Page<Coupon> couponList){

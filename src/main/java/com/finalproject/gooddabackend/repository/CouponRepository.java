@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Page<Coupon> findAllByCouponTypeAndCouponDespireAfter(String couponType, LocalDate now, Pageable pageable);
     Page<Coupon> findAllByCouponDespireAfterOrderByCouponLikeDesc(LocalDate now, Pageable pageable);
+    List<Coupon> findAllByOrderByIdDesc();
 
 }

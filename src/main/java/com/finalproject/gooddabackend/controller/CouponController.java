@@ -74,7 +74,7 @@ public class CouponController {
     @Secured(value = UserRoleEnum.Authority.ADMIN)
     @GetMapping("/api/admin/main")
     public ResponseDto couponList() {
-        List<Coupon> coupon = couponRepository.findAll();
+        List<Coupon> coupon = couponRepository.findAllByOrderByIdDesc();
         return new ResponseDto("success", coupon);
     }
 
