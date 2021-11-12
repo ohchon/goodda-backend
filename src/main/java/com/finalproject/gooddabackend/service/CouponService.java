@@ -8,6 +8,8 @@ import com.finalproject.gooddabackend.dto.coupon.CouponMainResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponUpdateRequestDto;
 import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.Coupon;
+import com.finalproject.gooddabackend.model.Folder;
+import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.repository.CouponRepository;
 import com.finalproject.gooddabackend.repository.FolderRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,19 +34,36 @@ public class CouponService {
 
 
     //페이지 보여주기(디테일 제외)
-    public ResponseDto responseList(List<Coupon> couponList ) {
+    public ResponseDto responseList(List<Coupon> couponList, User user) {
+
         List<CouponMainResponseDto> couponResponseDtoList = new ArrayList<>();
         for (Coupon coupon : couponList) {
-            CouponMainResponseDto newCouponDto = new CouponMainResponseDto(
-                    coupon.getId(),
-                    coupon.getCouponBrand(),
-                    coupon.getCouponSubTitle(),
-                    coupon.getCouponLogo(),
-                    coupon.getCouponCreate(),
-                    coupon.getCouponDespire(),
-                    coupon.getCouponLike()
-            );
-            couponResponseDtoList.add(newCouponDto);
+            Folder folder = folderRepository.findByUserIdAndCouponId(user.getId(), coupon.getId());
+            if (folder != null){
+                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(
+                        coupon.getId(),
+                        coupon.getCouponBrand(),
+                        coupon.getCouponSubTitle(),
+                        coupon.getCouponLogo(),
+                        coupon.getCouponCreate(),
+                        coupon.getCouponDespire(),
+                        coupon.getCouponLike(),
+                        1L
+                );
+                couponResponseDtoList.add(newCouponDto);
+            } else {
+                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(
+                        coupon.getId(),
+                        coupon.getCouponBrand(),
+                        coupon.getCouponSubTitle(),
+                        coupon.getCouponLogo(),
+                        coupon.getCouponCreate(),
+                        coupon.getCouponDespire(),
+                        coupon.getCouponLike(),
+                        0L
+                );
+                couponResponseDtoList.add(newCouponDto);
+            }
         }
         return new ResponseDto("success", couponResponseDtoList);
     }
@@ -101,8 +120,8 @@ public class CouponService {
         //기존에 S3에 있는 사진 삭제하기기
         if(couponUpdateRequestDto.getCouponImage() instanceof MultipartFile){
             //사진도 함께 업데이트 하는 경우: 기존사진 삭제후 업로드
-            Coupon foundCoupon = couponRepository.findById(couponId).orElseThrow(
-                    () -> new CustomErrorException("해당 쿠폰을 찾을 수 없어 수정할 수 없습니다."));
+//            Coupon foundCoupon = couponRepository.findById(couponId).orElseThrow(
+//                    () -> new CustomErrorException("해당 쿠폰을 찾을 수 없어 수정할 수 없습니다."));
             //deleteS3(foundCoupon.getCouponImage()); //지우고 넣고 싶지만 안돼서 S3에 있는것은 냅두고 그 위에 올리기
             couponImage = s3Uploader.upload(couponUpdateRequestDto.getCouponImage(), "image");
             if(couponImage == null) throw new CustomErrorException("이미지 업르드에 실패하였습니다");

@@ -50,7 +50,6 @@ public class Coupon {
     @Column(nullable = false)
     private Long couponLike;
 
-
         public Coupon(String couponBrand, String couponTitle, String couponSubTitle, String couponImage, String couponLogo,  String couponType, String couponDesc,  String couponUrl, LocalDate couponCreate, LocalDate couponDespire, Long couponLike) {
 
         this.couponBrand = couponBrand;

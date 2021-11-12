@@ -11,4 +11,5 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
     List<Folder> findAllByUserOrderByCouponDespireAsc(User user);
     List<Folder> deleteAllByCouponId(Long CouponId);
     Long countByCouponId(Long CouponId);
+    Folder findByUserIdAndCouponId(Long userId, Long CouponId);
 }

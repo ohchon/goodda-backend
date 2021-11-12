@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class CouponMainResponseDto {
+public class CouponRankResponseDto {
     private Long id;
     private String couponBrand;
     private String couponSubTitle;
@@ -18,5 +18,5 @@ public class CouponMainResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate couponDespire;
     private Long couponLike;
-    private Long couponSelect;
 }
+

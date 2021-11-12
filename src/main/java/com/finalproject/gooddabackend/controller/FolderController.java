@@ -53,7 +53,7 @@ public class FolderController {
         }
         folderRepository.save(folder);
 
-        //쿠폰찜 바꾸기
+        //쿠폰라이크 숫자 바꾸기
         Long couponId = requestDto.getCouponId();
         Coupon editCoupon = couponRepository.findById(couponId).orElseThrow(
                 () -> new CustomErrorException("해당 쿠폰을 찾을 수 없어 수정할 수 없습니다."));

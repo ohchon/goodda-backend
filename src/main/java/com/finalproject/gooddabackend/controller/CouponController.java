@@ -3,18 +3,23 @@ package com.finalproject.gooddabackend.controller;
 
 import com.finalproject.gooddabackend.dto.ResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponCreateRequestDto;
+import com.finalproject.gooddabackend.dto.coupon.CouponRankResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponUpdateRequestDto;
 import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.Coupon;
+import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.model.UserRoleEnum;
 import com.finalproject.gooddabackend.repository.CouponRepository;
+import com.finalproject.gooddabackend.security.UserDetailsImpl;
 import com.finalproject.gooddabackend.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,10 +31,11 @@ public class CouponController {
 
     // 쿠폰 리스트 타입별로
     @GetMapping("/api/main/{couponType}")
-    public ResponseDto couponList(@PathVariable String couponType){
+    public ResponseDto couponList(@PathVariable String couponType, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        User user = userDetails.getUser();
         LocalDate now = LocalDate.now();
         List<Coupon> couponList = couponRepository.findAllByCouponTypeAndCouponDespireAfterOrderByCouponDespireAsc(couponType, now);
-        return couponService.responseList(couponList);
+        return couponService.responseList(couponList, user);
     }
 
     // 해당 id 쿠폰 주기
@@ -44,7 +50,20 @@ public class CouponController {
     public ResponseDto rankCoupon() {
         LocalDate now = LocalDate.now();
         List<Coupon> couponList = couponRepository.findAllByCouponDespireAfterOrderByCouponLikeDesc(now);
-        return couponService.responseList(couponList);
+        List<CouponRankResponseDto> couponResponseDtoList = new ArrayList<>();
+        for (Coupon coupon : couponList) {
+            CouponRankResponseDto newCouponDto = new CouponRankResponseDto(
+                    coupon.getId(),
+                    coupon.getCouponBrand(),
+                    coupon.getCouponSubTitle(),
+                    coupon.getCouponLogo(),
+                    coupon.getCouponCreate(),
+                    coupon.getCouponDespire(),
+                    coupon.getCouponLike()
+            );
+            couponResponseDtoList.add(newCouponDto);
+        }
+        return new ResponseDto("success", couponResponseDtoList);
     }
 
     // (관리자용) 쿠폰 리스트
