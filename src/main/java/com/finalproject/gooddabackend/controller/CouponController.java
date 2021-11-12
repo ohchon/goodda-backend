@@ -3,23 +3,23 @@ package com.finalproject.gooddabackend.controller;
 
 import com.finalproject.gooddabackend.dto.ResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponCreateRequestDto;
-import com.finalproject.gooddabackend.dto.coupon.CouponRankResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponUpdateRequestDto;
 import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.Coupon;
-import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.model.UserRoleEnum;
 import com.finalproject.gooddabackend.repository.CouponRepository;
 import com.finalproject.gooddabackend.security.UserDetailsImpl;
 import com.finalproject.gooddabackend.service.CouponService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,12 +31,17 @@ public class CouponController {
 
     // 쿠폰 리스트 타입별로
     @GetMapping("/api/main/{couponType}")
-    public ResponseDto couponList(@PathVariable String couponType, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        User user = userDetails.getUser();
-        LocalDate now = LocalDate.now();
-        List<Coupon> couponList = couponRepository.findAllByCouponTypeAndCouponDespireAfterOrderByCouponDespireAsc(couponType, now);
-        return couponService.responseList(couponList, user);
+    public ResponseDto couponList(@PathVariable String couponType,
+                                  @RequestParam("page") int page,
+                                  @RequestParam("size") int size,
+                                  @RequestParam("sortBy") String sortBy,
+                                  @RequestParam("isAsc") boolean isAsc,
+                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
+        Long userId = userDetails.getUser().getId();
+        page = page - 1;
+        return couponService.responseList1(couponType, userId, page, size, sortBy, isAsc);
     }
+
 
     // 해당 id 쿠폰 주기
     @GetMapping("/api/detail/{couponId}")
@@ -47,27 +52,20 @@ public class CouponController {
     }
     //쿠폰순위
     @GetMapping("/api/main/rank")
-    public ResponseDto rankCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseDto rankCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                  @RequestParam("page") int page,
+                                  @RequestParam("size") int size) {
+        page = page - 1;
         LocalDate now = LocalDate.now();
-        List<Coupon> couponList = couponRepository.findAllByCouponDespireAfterOrderByCouponLikeDesc(now);
-        List<CouponRankResponseDto> couponResponseDtoList = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Coupon> couponList = couponRepository.findAllByCouponDespireAfterOrderByCouponLikeDesc(now, pageable);
+
         if(userDetails == null) {
-            for (Coupon coupon : couponList) {
-                CouponRankResponseDto newCouponDto = new CouponRankResponseDto(
-                        coupon.getId(),
-                        coupon.getCouponBrand(),
-                        coupon.getCouponSubTitle(),
-                        coupon.getCouponLogo(),
-                        coupon.getCouponCreate(),
-                        coupon.getCouponDespire(),
-                        coupon.getCouponLike()
-                );
-                couponResponseDtoList.add(newCouponDto);
-            }
-            return new ResponseDto("success", couponResponseDtoList);
+            return couponService.responseRankList(couponList);
         } else {
-            User user = userDetails.getUser();
-            return couponService.responseList(couponList, user);
+            Long userId = userDetails.getUser().getId();
+            return couponService.showList(userId, couponList);
         }
     }
 

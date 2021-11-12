@@ -5,14 +5,18 @@ import com.finalproject.gooddabackend.awsS3.S3Uploader;
 import com.finalproject.gooddabackend.dto.ResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponCreateRequestDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponMainResponseDto;
+import com.finalproject.gooddabackend.dto.coupon.CouponRankResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponUpdateRequestDto;
 import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.Coupon;
 import com.finalproject.gooddabackend.model.Folder;
-import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.repository.CouponRepository;
 import com.finalproject.gooddabackend.repository.FolderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,40 +37,36 @@ public class CouponService {
     private final String bucket = "good-da-bucket";
 
 
-    //페이지 보여주기(디테일 제외)
-    public ResponseDto responseList(List<Coupon> couponList, User user) {
+    //카테고리페이지 보여주기(디테일 제외)
+    public ResponseDto responseList1(String couponType, Long userId, int page, int size, String sortBy, boolean isAsc) {
 
-        List<CouponMainResponseDto> couponResponseDtoList = new ArrayList<>();
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        LocalDate now = LocalDate.now();
+        Page<Coupon> couponList = couponRepository.findAllByCouponTypeAndCouponDespireAfter(couponType, now, pageable);
+        return showList(userId, couponList);
+    }
+
+    //랭크페이지 보여주기(디테일 제외)
+    public ResponseDto responseRankList(Page<Coupon> couponList) {
+        List<CouponRankResponseDto> couponResponseDtoList = new ArrayList<>();
         for (Coupon coupon : couponList) {
-            Folder folder = folderRepository.findByUserIdAndCouponId(user.getId(), coupon.getId());
-            if (folder != null){
-                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(
-                        coupon.getId(),
-                        coupon.getCouponBrand(),
-                        coupon.getCouponSubTitle(),
-                        coupon.getCouponLogo(),
-                        coupon.getCouponCreate(),
-                        coupon.getCouponDespire(),
-                        coupon.getCouponLike(),
-                        1L
-                );
-                couponResponseDtoList.add(newCouponDto);
-            } else {
-                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(
-                        coupon.getId(),
-                        coupon.getCouponBrand(),
-                        coupon.getCouponSubTitle(),
-                        coupon.getCouponLogo(),
-                        coupon.getCouponCreate(),
-                        coupon.getCouponDespire(),
-                        coupon.getCouponLike(),
-                        0L
-                );
-                couponResponseDtoList.add(newCouponDto);
-            }
+            CouponRankResponseDto newCouponDto = new CouponRankResponseDto(
+                    coupon.getId(),
+                    coupon.getCouponBrand(),
+                    coupon.getCouponSubTitle(),
+                    coupon.getCouponLogo(),
+                    coupon.getCouponCreate(),
+                    coupon.getCouponDespire(),
+                    coupon.getCouponLike()
+            );
+            couponResponseDtoList.add(newCouponDto);
         }
         return new ResponseDto("success", couponResponseDtoList);
     }
+
 
 
     //쿠폰생성(관리자)
@@ -132,6 +132,42 @@ public class CouponService {
         return new ResponseDto("success", "수정성공");
     }
 
+    public ResponseDto showList(Long userId, Page<Coupon> couponList){
+
+        List<CouponMainResponseDto> couponResponseDtoList = new ArrayList<>();
+        for (Coupon coupon : couponList) {
+            Folder folder = folderRepository.findByUserIdAndCouponId(userId, coupon.getId());
+            if (folder != null){
+                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(
+                        coupon.getId(),
+                        coupon.getCouponBrand(),
+                        coupon.getCouponSubTitle(),
+                        coupon.getCouponLogo(),
+                        coupon.getCouponCreate(),
+                        coupon.getCouponDespire(),
+                        coupon.getCouponLike(),
+                        1L
+                );
+                couponResponseDtoList.add(newCouponDto);
+            } else {
+                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(
+                        coupon.getId(),
+                        coupon.getCouponBrand(),
+                        coupon.getCouponSubTitle(),
+                        coupon.getCouponLogo(),
+                        coupon.getCouponCreate(),
+                        coupon.getCouponDespire(),
+                        coupon.getCouponLike(),
+                        0L
+                );
+                couponResponseDtoList.add(newCouponDto);
+            }
+        }
+        return new ResponseDto("success", couponResponseDtoList);
+    }
+
+}
+
     //삭제 기능인데 잘 안된다...
 //    public void deleteS3(@RequestParam String imageName){
 //        //https://S3 버킷 URL/버킷에 생성한 폴더명/이미지이름
@@ -143,5 +179,5 @@ public class CouponService {
 //            throw new AmazonServiceException(e.getMessage());
 //        }
 //    }
-}
+
 
