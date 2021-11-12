@@ -47,24 +47,30 @@ public class CouponController {
     }
     //쿠폰순위
     @GetMapping("/api/main/rank")
-    public ResponseDto rankCoupon() {
+    public ResponseDto rankCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         LocalDate now = LocalDate.now();
         List<Coupon> couponList = couponRepository.findAllByCouponDespireAfterOrderByCouponLikeDesc(now);
         List<CouponRankResponseDto> couponResponseDtoList = new ArrayList<>();
-        for (Coupon coupon : couponList) {
-            CouponRankResponseDto newCouponDto = new CouponRankResponseDto(
-                    coupon.getId(),
-                    coupon.getCouponBrand(),
-                    coupon.getCouponSubTitle(),
-                    coupon.getCouponLogo(),
-                    coupon.getCouponCreate(),
-                    coupon.getCouponDespire(),
-                    coupon.getCouponLike()
-            );
-            couponResponseDtoList.add(newCouponDto);
+        if(userDetails == null) {
+            for (Coupon coupon : couponList) {
+                CouponRankResponseDto newCouponDto = new CouponRankResponseDto(
+                        coupon.getId(),
+                        coupon.getCouponBrand(),
+                        coupon.getCouponSubTitle(),
+                        coupon.getCouponLogo(),
+                        coupon.getCouponCreate(),
+                        coupon.getCouponDespire(),
+                        coupon.getCouponLike()
+                );
+                couponResponseDtoList.add(newCouponDto);
+            }
+            return new ResponseDto("success", couponResponseDtoList);
+        } else {
+            User user = userDetails.getUser();
+            return couponService.responseList(couponList, user);
         }
-        return new ResponseDto("success", couponResponseDtoList);
     }
+
 
     // (관리자용) 쿠폰 리스트
     @Secured(value = UserRoleEnum.Authority.ADMIN)

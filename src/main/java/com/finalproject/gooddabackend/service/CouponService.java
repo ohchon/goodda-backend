@@ -111,8 +111,8 @@ public class CouponService {
         String couponSubTitle = couponUpdateRequestDto.getCouponSubTitle();
         String couponImage = editCoupon.getCouponImage();
         String couponLogo = couponUpdateRequestDto.getCouponLogo();
-        String couponDesc = couponUpdateRequestDto.getCouponDesc();
         String couponType = couponUpdateRequestDto.getCouponType();
+        String couponDesc = couponUpdateRequestDto.getCouponDesc();
         String couponUrl = couponUpdateRequestDto.getCouponUrl();
         LocalDate couponCreate = couponUpdateRequestDto.getCouponCreate();
         LocalDate couponDespire = couponUpdateRequestDto.getCouponDespire();
@@ -127,7 +127,7 @@ public class CouponService {
             if(couponImage == null) throw new CustomErrorException("이미지 업르드에 실패하였습니다");
         }
 
-        editCoupon.updateCoupon(couponBrand, couponTitle, couponSubTitle, couponImage, couponLogo, couponDesc, couponType, couponUrl, couponCreate, couponDespire);
+        editCoupon.updateCoupon(couponBrand, couponTitle, couponSubTitle, couponImage, couponLogo, couponType, couponDesc,  couponUrl, couponCreate, couponDespire);
 
         return new ResponseDto("success", "수정성공");
     }
