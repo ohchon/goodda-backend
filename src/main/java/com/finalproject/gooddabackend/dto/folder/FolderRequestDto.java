@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FolderRequestDto {
+public class  FolderRequestDto {
 
     @NotNull
     private Long couponId;

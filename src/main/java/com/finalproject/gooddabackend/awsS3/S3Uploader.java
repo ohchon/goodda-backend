@@ -52,7 +52,6 @@ public class S3Uploader {
             return;
         }
         log.info("파일이 삭제되지 못했습니다.");
-
     }
 
     // 로컬에 파일 업로드 하기

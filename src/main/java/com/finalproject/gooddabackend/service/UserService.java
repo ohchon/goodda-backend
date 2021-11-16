@@ -6,6 +6,7 @@ import com.finalproject.gooddabackend.dto.user.UserUpdateResponseDto;
 import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.model.UserRoleEnum;
+import com.finalproject.gooddabackend.repository.FolderRepository;
 import com.finalproject.gooddabackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +20,9 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
+    private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";// 이것도 application.propertiiesd에 넣고 숨기자
+    private final FolderRepository folderRepository;
+
 
     //회원가입
     public ResponseDto signup(SignupRequestDto signupRequestDto) {
@@ -72,6 +75,7 @@ public class UserService {
     }
     //계정삭제
     public void delete(Long id) {
+        folderRepository.deleteAllByUserId(id);
         userRepository.deleteById(id);
     }
 

@@ -19,4 +19,5 @@ public class CouponMainResponseDto {
     private LocalDate couponDespire;
     private Long couponLike;
     private Long couponSelect;
+
 }

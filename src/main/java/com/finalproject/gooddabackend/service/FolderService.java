@@ -36,7 +36,6 @@ public class FolderService {
         Folder folder = folderRepository.findAllByUserIdAndCouponId(user.getId(), couponId);
         folder.deleteFolder();
         folderRepository.delete(folder);
-
         //쿠폰찜숫자 바꾸기
         Coupon editCoupon = couponRepository.findById(couponId).orElseThrow(
                 () -> new CustomErrorException("해당 쿠폰을 찾을 수 없어 수정할 수 없습니다."));
