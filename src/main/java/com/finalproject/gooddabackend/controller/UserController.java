@@ -140,7 +140,7 @@ public class UserController {
         return new ResponseDto("success",userShowResponseDto);
     }
 
-
+//유저활성화
     @PutMapping("api/user/reactivation")
     public ResponseDto reactivateUser(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {

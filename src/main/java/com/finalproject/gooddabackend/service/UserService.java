@@ -83,7 +83,7 @@ public class UserService {
 
         user.statusUser(false);
     }
-    //계정삭제
+    //계정활성화
     @Transactional
     public void reactivate(Long id) {
 //        folderRepository.deleteAllByUserId(id);
