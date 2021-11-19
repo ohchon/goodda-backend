@@ -2,6 +2,7 @@ package com.finalproject.gooddabackend.model;
 
 import com.finalproject.gooddabackend.dto.coupon.CouponCreateRequestDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponUpdateRequestDto;
+import com.finalproject.gooddabackend.validator.CouponVaildator;
 import lombok.*;
 
 import javax.persistence.*;
@@ -52,21 +53,27 @@ public class Coupon {
     @Column(nullable = false)
     private Long couponLike;
 
-    public Coupon(String couponBrand, String couponTitle, String couponSubTitle, String couponImage, String couponLogo,  String couponType, String couponDesc,  String couponUrl, LocalDate couponCreate, LocalDate couponDespire, Long couponLike) {
+    //함 지워보자 쓰는 곳 없으니
+//    public Coupon(String couponBrand, String couponTitle, String couponSubTitle, String couponImage, String couponLogo,  String couponType, String couponDesc,  String couponUrl, LocalDate couponCreate, LocalDate couponDespire, Long couponLike) {
+//
+//        this.couponBrand = couponBrand;
+//        this.couponTitle = couponTitle;
+//        this.couponSubTitle= couponSubTitle;
+//        this.couponImage = couponImage;
+//        this.couponLogo = couponLogo;
+//        this.couponType = couponType;
+//        this.couponDesc = couponDesc;
+//        this.couponUrl = couponUrl;
+//        this.couponCreate = couponCreate;
+//        this.couponDespire = couponDespire;
+//        this.couponLike = couponLike;
+//    }
 
-        this.couponBrand = couponBrand;
-        this.couponTitle = couponTitle;
-        this.couponSubTitle= couponSubTitle;
-        this.couponImage = couponImage;
-        this.couponLogo = couponLogo;
-        this.couponType = couponType;
-        this.couponDesc = couponDesc;
-        this.couponUrl = couponUrl;
-        this.couponCreate = couponCreate;
-        this.couponDespire = couponDespire;
-        this.couponLike = couponLike;
-    }
+
+
     public Coupon(CouponCreateRequestDto couponCreateRequestDto, Long couponLike, String couponImage){
+        CouponVaildator.validateCouponInput(couponCreateRequestDto, couponLike, couponImage);
+
         this.couponBrand = couponCreateRequestDto.getCouponBrand();
         this.couponTitle = couponCreateRequestDto.getCouponTitle();
         this.couponSubTitle= couponCreateRequestDto.getCouponSubTitle();
@@ -90,18 +97,5 @@ public class Coupon {
         this.couponUrl = couponUpdateRequestDto.getCouponUrl();
         this.couponCreate = couponUpdateRequestDto.getCouponCreate();
         this.couponDespire = couponUpdateRequestDto.getCouponDespire();
-    }
-
-    public void updateCoupon(String couponBrand, String couponTitle, String couponSubTitle, String couponImage, String couponLogo,  String couponType, String couponDesc,  String couponUrl, LocalDate couponCreate, LocalDate couponDespire){
-        this.couponBrand = couponBrand;
-        this.couponTitle = couponTitle;
-        this.couponSubTitle = couponSubTitle;
-        this.couponImage = couponImage;
-        this.couponLogo = couponLogo;
-        this.couponType = couponType;
-        this.couponDesc = couponDesc;
-        this.couponUrl = couponUrl;
-        this.couponCreate = couponCreate;
-        this.couponDespire = couponDespire;
     }
 }

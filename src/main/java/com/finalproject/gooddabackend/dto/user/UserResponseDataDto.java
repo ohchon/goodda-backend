@@ -16,4 +16,5 @@ public class UserResponseDataDto {
     String type2;
     String type3;
     UserRoleEnum role;
+    boolean status;
 }

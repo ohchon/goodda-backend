@@ -12,5 +12,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Page<Coupon> findAllByCouponTypeAndCouponDespireAfter(String couponType, LocalDate now, Pageable pageable);
     List<Coupon> findTop10ByCouponDespireAfterOrderByCouponLikeDesc(LocalDate now);
     List<Coupon> findAllByOrderByIdDesc();
-
+    List<Coupon> findAllByCouponDespireBefore(LocalDate despireDay);
+    void deleteAllByCouponDespireBefore(LocalDate despireDay);
 }

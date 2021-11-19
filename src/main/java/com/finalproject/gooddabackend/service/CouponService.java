@@ -4,10 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.finalproject.gooddabackend.awsS3.S3Uploader;
 import com.finalproject.gooddabackend.dto.ResponseDto;
-import com.finalproject.gooddabackend.dto.coupon.CouponCreateRequestDto;
-import com.finalproject.gooddabackend.dto.coupon.CouponMainResponseDto;
-import com.finalproject.gooddabackend.dto.coupon.CouponRankResponseDto;
-import com.finalproject.gooddabackend.dto.coupon.CouponUpdateRequestDto;
+import com.finalproject.gooddabackend.dto.coupon.*;
 import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.Coupon;
 import com.finalproject.gooddabackend.model.Folder;
@@ -35,7 +32,7 @@ public class CouponService {
     private final FolderRepository folderRepository;
     private final S3Uploader s3Uploader;
     private final AmazonS3Client amazonS3Client;
-    private final String bucket = "good-da-bucket";
+    private final String bucket = "good-da-bucket";//손보긴 해야함
 
     //쿠폰생성(관리자)
     public ResponseDto createCoupon(CouponCreateRequestDto couponCreateRequestDto) throws IOException {
@@ -116,20 +113,13 @@ public class CouponService {
         List<CouponMainResponseDto> couponResponseDtoList = new ArrayList<>();
         for (Coupon coupon : couponList) {
             Folder folder = folderRepository.findByUserIdAndCouponId(userId, coupon.getId());
-            Long id = coupon.getId();
-            String couponBrand = coupon.getCouponBrand();
-            String couponSubTitle = coupon.getCouponSubTitle();
-            String couponLogo =coupon.getCouponLogo();
-            LocalDate couponCreate = coupon.getCouponCreate();
-            LocalDate couponDespire =coupon.getCouponDespire();
-            Long couponLike = coupon.getCouponLike();
             if (folder != null) {
                 Long couponSelect = 1L;
-                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(id, couponBrand, couponSubTitle, couponLogo, couponCreate, couponDespire, couponLike, couponSelect);
+                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(coupon, couponSelect);
                 couponResponseDtoList.add(newCouponDto);
             } else {
                 Long couponSelect = 0L;
-                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(id, couponBrand, couponSubTitle, couponLogo, couponCreate, couponDespire, couponLike, couponSelect);
+                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(coupon, couponSelect);
                 couponResponseDtoList.add(newCouponDto);
             }
         }
@@ -138,23 +128,16 @@ public class CouponService {
 
 //랭크보여주기 + 유저찜기록
     public ResponseDto showRankList(Long userId, List<Coupon> couponList) {
-        List<CouponMainResponseDto> couponResponseDtoList = new ArrayList<>();
+        List<CouponRankResponseDto> couponResponseDtoList = new ArrayList<>();
         for (Coupon coupon : couponList) {
             Folder folder = folderRepository.findByUserIdAndCouponId(userId, coupon.getId());
-                Long id = coupon.getId();
-                String couponBrand = coupon.getCouponBrand();
-                String couponSubTitle = coupon.getCouponSubTitle();
-                String couponLogo =coupon.getCouponLogo();
-                LocalDate couponCreate = coupon.getCouponCreate();
-                LocalDate couponDespire =coupon.getCouponDespire();
-                Long couponLike = coupon.getCouponLike();
             if (folder != null) {
                 Long couponSelect = 1L;
-                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(id, couponBrand, couponSubTitle, couponLogo, couponCreate, couponDespire, couponLike, couponSelect);
+                CouponRankResponseDto newCouponDto = new CouponRankResponseDto(coupon, couponSelect);
                 couponResponseDtoList.add(newCouponDto);
             } else {
                 Long couponSelect = 0L;
-                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(id, couponBrand, couponSubTitle, couponLogo, couponCreate, couponDespire, couponLike, couponSelect);
+                CouponRankResponseDto newCouponDto = new CouponRankResponseDto(coupon, couponSelect);
                 couponResponseDtoList.add(newCouponDto);
             }
         }
@@ -164,15 +147,7 @@ public class CouponService {
     public ResponseDto responseRankList(List<Coupon> couponList) {
         List<CouponRankResponseDto> couponResponseDtoList = new ArrayList<>();
         for (Coupon coupon : couponList) {
-            CouponRankResponseDto newCouponDto = new CouponRankResponseDto(
-                    coupon.getId(),
-                    coupon.getCouponBrand(),
-                    coupon.getCouponSubTitle(),
-                    coupon.getCouponLogo(),
-                    coupon.getCouponCreate(),
-                    coupon.getCouponDespire(),
-                    coupon.getCouponLike()
-            );
+            CouponRankResponseDto newCouponDto = new CouponRankResponseDto(coupon);
             couponResponseDtoList.add(newCouponDto);
         }
         return new ResponseDto("success", couponResponseDtoList);

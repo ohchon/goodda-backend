@@ -6,7 +6,6 @@ import com.finalproject.gooddabackend.dto.user.UserUpdateResponseDto;
 import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.model.UserRoleEnum;
-import com.finalproject.gooddabackend.repository.FolderRepository;
 import com.finalproject.gooddabackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +20,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";// 이것도 application.propertiiesd에 넣고 숨기자
-    private final FolderRepository folderRepository;
 
 
     //회원가입
@@ -49,7 +47,8 @@ public class UserService {
             role = UserRoleEnum.ADMIN;
         }
 
-        User user = new User(userEmail,nickname,encodedPassword, telecom, cardType, type1, type2, type3, role);
+
+        User user = new User(userEmail,nickname,encodedPassword, telecom, cardType, type1, type2, type3, role, true);
         System.out.println("UserService의 User:"+user.getUserEmail());
         User savedUser = userRepository.save(user);
         System.out.println(savedUser.getUserEmail());
@@ -74,9 +73,26 @@ public class UserService {
         return user;
     }
     //계정삭제
+    @Transactional
     public void delete(Long id) {
-        folderRepository.deleteAllByUserId(id);
-        userRepository.deleteById(id);
+//        folderRepository.deleteAllByUserId(id);
+//        userRepository.deleteById(id);
+        // 유저 존재여부 확인
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new CustomErrorException("해당 유저를 찾을 수 없어 수정할 수 없습니다."));
+
+        user.statusUser(false);
+    }
+    //계정삭제
+    @Transactional
+    public void reactivate(Long id) {
+//        folderRepository.deleteAllByUserId(id);
+//        userRepository.deleteById(id);
+        // 유저 존재여부 확인
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new CustomErrorException("해당 유저를 찾을 수 없어 수정할 수 없습니다."));
+
+        user.statusUser(true);
     }
 
     //계정수정
