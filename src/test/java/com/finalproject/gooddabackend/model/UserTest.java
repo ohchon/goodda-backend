@@ -45,8 +45,9 @@ class UserTest {
             }
             role = UserRoleEnum.ADMIN;
         }
+        boolean status = true;
 
-        User user = new User(signupRequestDto, password, role);
+        User user = new User(signupRequestDto, password, role, status);
 
         assertNull(user.getId());
         assertEquals(userEmail, user.getUserEmail());
@@ -58,5 +59,6 @@ class UserTest {
         assertEquals(type2, user.getType2());
         assertEquals(type3, user.getType3());
         assertEquals(role, user.getRole());
+        assertEquals(status, user.isStatus());
     }
 }
