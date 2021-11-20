@@ -54,8 +54,4 @@ public class Scheduler {
         System.out.println("쿠폰삭제끝");
         System.out.println("스케쥴끝");
     }
-
-
-
-
 }

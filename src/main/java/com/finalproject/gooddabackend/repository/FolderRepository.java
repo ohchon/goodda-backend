@@ -4,6 +4,7 @@ import com.finalproject.gooddabackend.model.Folder;
 import com.finalproject.gooddabackend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface FolderRepository extends JpaRepository<Folder, Long> {
@@ -13,5 +14,5 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
     void deleteAllByUserId(Long UserId);
     Long countByCouponId(Long CouponId);
     Folder findByUserIdAndCouponId(Long userId, Long CouponId);
-
+    Long countAllByUserIdAndCouponDespire(Long id, LocalDate now);
 }

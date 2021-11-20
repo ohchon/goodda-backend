@@ -17,4 +17,5 @@ public class UserResponseDataDto {
     String type3;
     UserRoleEnum role;
     boolean status;
+    Long alertCoupon;
 }

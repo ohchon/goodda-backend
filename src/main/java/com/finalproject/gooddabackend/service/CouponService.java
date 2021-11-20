@@ -152,6 +152,12 @@ public class CouponService {
         }
         return new ResponseDto("success", couponResponseDtoList);
     }
+    //보관함안 마감임박쿠폰개수 보여주기
+    public Long couponAlert(Long id){
+        LocalDate now = LocalDate.now();
+        return folderRepository.countAllByUserIdAndCouponDespire(id, now);
+    }
+
 
 }
 
