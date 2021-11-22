@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class CouponResponseDto {
+public class CouponResponseDto implements Comparable<CouponResponseDto> {
 
     private Long id;
 
@@ -26,8 +26,7 @@ public class CouponResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate couponDespire;
 
-    public CouponResponseDto(Folder folder) {
-        Coupon coupon = folder.getCoupon();
+    public CouponResponseDto(Coupon coupon) {
         this.id = coupon.getId();
         this.couponBrand = coupon.getCouponBrand();
         this.couponSubTitle = coupon.getCouponSubTitle();
@@ -35,4 +34,8 @@ public class CouponResponseDto {
         this.couponCreate = coupon.getCouponCreate();
         this.couponDespire = coupon.getCouponDespire();
     }
+@Override
+public int compareTo(CouponResponseDto o) {
+        return getCouponDespire().compareTo(o.getCouponDespire());
+        }
 }

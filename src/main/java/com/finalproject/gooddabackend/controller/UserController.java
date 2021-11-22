@@ -10,6 +10,7 @@ import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.model.UserRoleEnum;
 import com.finalproject.gooddabackend.repository.UserRepository;
 import com.finalproject.gooddabackend.security.UserDetailsImpl;
+import com.finalproject.gooddabackend.service.CouponService;
 import com.finalproject.gooddabackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,6 +29,7 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final CouponService couponService;
 
     //회원가입
     @PostMapping("/api/user/signup")
@@ -49,9 +51,12 @@ public class UserController {
         String checkedType2 = user.getType2();
         String checkedType3 = user.getType3();
         UserRoleEnum role = user.getRole();
+        boolean status = user.isStatus();
+
+       Long alertCoupon = couponService.couponAlert(user);
 
 
-        UserResponseDataDto dataDto = new UserResponseDataDto(token,checkedUserEmail,checkedNickname, checkedTelecom, checkedCardType, checkedType1, checkedType2, checkedType3, role);
+        UserResponseDataDto dataDto = new UserResponseDataDto(token,checkedUserEmail,checkedNickname, checkedTelecom, checkedCardType, checkedType1, checkedType2, checkedType3, role, status, alertCoupon);
 
         response.setHeader("X-AUTH-TOKEN", token);
         Cookie cookie = new Cookie("X-AUTH-TOKEN", token);
@@ -75,7 +80,7 @@ public class UserController {
 
 
     //계정삭제
-    @PostMapping("/api/user/delete")
+    @PutMapping("/api/user/delete")
     public ResponseDto deleteUser(
             @RequestBody UserDeleteRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -139,5 +144,11 @@ public class UserController {
         return new ResponseDto("success",userShowResponseDto);
     }
 
-
+//유저활성화
+    @PutMapping("api/user/reactivation")
+    public ResponseDto reactivateUser(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        userService.reactivate(userDetails.getUser().getId());
+        return new ResponseDto("success", "계정이 활성화되었습니다");
+    }
 }

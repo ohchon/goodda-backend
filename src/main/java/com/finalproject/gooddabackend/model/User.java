@@ -1,6 +1,7 @@
 package com.finalproject.gooddabackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.finalproject.gooddabackend.dto.user.SignupRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,7 +54,11 @@ public class User extends Timestamped {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public User(String userEmail, String nickname, String password, String telecom, String cardType, String type1, String type2, String type3, UserRoleEnum role){
+    @Column(nullable = false)
+    private boolean status;
+
+
+    public User(String userEmail, String nickname, String password, String telecom, String cardType, String type1, String type2, String type3, UserRoleEnum role, boolean status){
         this.userEmail = userEmail;
         this.nickname = nickname;
         this.password = password;
@@ -63,6 +68,19 @@ public class User extends Timestamped {
         this.type2 = type2;
         this.type3 = type3;
         this.role = role;
+        this.status = status;
+    }
+    public User(SignupRequestDto signupRequestDto, String password, UserRoleEnum role, boolean status){
+        this.userEmail = signupRequestDto.getUserEmail();
+        this.nickname = signupRequestDto.getNickname();
+        this.password = password;
+        this.telecom = signupRequestDto.getTelecom();
+        this.cardType = signupRequestDto.getCardType();
+        this.type1 = signupRequestDto.getType1();
+        this.type2 = signupRequestDto.getType2();
+        this.type3 = signupRequestDto.getType3();
+        this.role = role;
+        this.status = status;
     }
     public void updateUser(String nickname, String telecom, String cardType, String type1, String type2, String type3){
         this.nickname = nickname;
@@ -71,5 +89,8 @@ public class User extends Timestamped {
         this.type1 = type1;
         this.type2 = type2;
         this.type3 = type3;
+    }
+    public void statusUser(boolean status){
+        this.status = status;
     }
 }

@@ -32,5 +32,18 @@ public class CouponUpdateRequestDto {
     @NotBlank
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate couponDespire;
+    //테스트 코드용
+    public CouponUpdateRequestDto(String couponBrand, String couponTitle, String couponSubTitle, MultipartFile couponImage, String couponLogo, String couponType, String couponDesc, String couponUrl, LocalDate couponCreate, LocalDate couponDespire) {
+        this.couponBrand = couponBrand;
+        this.couponTitle = couponTitle;
+        this.couponSubTitle= couponSubTitle;
+        this.couponImage = couponImage;
+        this.couponLogo = couponLogo;
+        this.couponType = couponType;
+        this.couponDesc = couponDesc;
+        this.couponUrl = couponUrl;
+        this.couponCreate = couponCreate;
+        this.couponDespire = couponDespire;
+    }
 }
 

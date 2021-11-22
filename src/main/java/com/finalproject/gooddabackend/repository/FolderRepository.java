@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface FolderRepository extends JpaRepository<Folder, Long> {
     Folder findAllByUserIdAndCouponId(Long userId, Long CouponId);
-    List<Folder> findAllByUserOrderByCouponDespireAsc(User user);
-    List<Folder> deleteAllByCouponId(Long CouponId);
-    Long countByCouponId(Long CouponId);
+    void deleteAllByCouponId(Long CouponId);
+    void deleteAllByUserId(Long UserId);
     Folder findByUserIdAndCouponId(Long userId, Long CouponId);
+    List<Folder> findAllByUser(User user);
 }
