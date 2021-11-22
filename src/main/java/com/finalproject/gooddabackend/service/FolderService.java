@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -37,15 +37,25 @@ public class FolderService {
         folder.deleteFolder();
         folderRepository.delete(folder);
         //쿠폰찜숫자 바꾸기
-        Coupon editCoupon = couponRepository.findById(couponId).orElseThrow(
-                () -> new CustomErrorException("해당 쿠폰을 찾을 수 없어 수정할 수 없습니다."));
-        Long couponLikes = folderRepository.countByCouponId(couponId);
-        editCoupon.setCouponLike(couponLikes);
+        Coupon coupon = loadCoupon(couponId);
+        Long couponLike = coupon.getCouponLike();
+        Long couponLikes = couponLike-1;
+        coupon.setCouponLike(couponLikes);
     }
+
+
 
     //보관함 조희
     public FolderResponseDto getCoupon(User user) {
-        List<CouponResponseDto> responseDtoList = folderRepository.findAllByUserOrderByCouponDespireAsc(user).stream().map(CouponResponseDto::new).collect(Collectors.toCollection(ArrayList::new));
-        return new FolderResponseDto(responseDtoList);
+       List<Folder> folderList = folderRepository.findAllByUser(user);
+
+       List<CouponResponseDto> couponList = new ArrayList<>();
+        for(Folder folder: folderList){
+            Coupon coupon = folder.getCoupon();
+            CouponResponseDto couponResponseDto = new CouponResponseDto(coupon);
+            couponList.add(couponResponseDto);
+        }
+        Collections.sort(couponList);
+        return new FolderResponseDto(couponList);
     }
 }

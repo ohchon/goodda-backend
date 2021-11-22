@@ -12,6 +12,7 @@ public class FolderResponseDto {
     private List<CouponResponseDto> coupons;
 
     public FolderResponseDto(List<CouponResponseDto>responseDtoList) {
+
         this.coupons = responseDtoList;
     }
 }

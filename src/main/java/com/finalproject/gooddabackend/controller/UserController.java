@@ -53,7 +53,7 @@ public class UserController {
         UserRoleEnum role = user.getRole();
         boolean status = user.isStatus();
 
-       Long alertCoupon = couponService.couponAlert(user.getId());
+       Long alertCoupon = couponService.couponAlert(user);
 
 
         UserResponseDataDto dataDto = new UserResponseDataDto(token,checkedUserEmail,checkedNickname, checkedTelecom, checkedCardType, checkedType1, checkedType2, checkedType3, role, status, alertCoupon);

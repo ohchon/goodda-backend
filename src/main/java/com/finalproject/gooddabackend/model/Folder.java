@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -22,17 +21,13 @@ public class Folder {
     @JsonIgnore
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
-    @Column(nullable = false)
-    private LocalDate couponDespire;
-
-    public void addNewFolder(User user, Coupon coupon, LocalDate couponDespire) {
+    public void addNewFolder(User user, Coupon coupon) {
         this.user = user;
         this.coupon = coupon;
-        this.couponDespire = couponDespire;
     }
 
     public void deleteFolder() {
