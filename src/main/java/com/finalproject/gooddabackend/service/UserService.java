@@ -25,19 +25,10 @@ public class UserService {
     //회원가입
     public ResponseDto signup(SignupRequestDto signupRequestDto) {
         String userEmail = signupRequestDto.getUserEmail();
-        String nickname = signupRequestDto.getNickname();//실명
-        String telecom = signupRequestDto.getTelecom();
-        String cardType = signupRequestDto.getCardType();
-        String type1 = signupRequestDto.getType1();
-        String type2 = signupRequestDto.getType2();
-        String type3 = signupRequestDto.getType3();
-
-        System.out.println("UserService:"+userEmail);
-
 //        회원 ID 중복 확인
         checkRedunbancy(userEmail);
         //패스워드 암호화
-        String encodedPassword= passwordEncoder.encode(signupRequestDto.getPassword());
+        String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDto.isAdmin()) {
@@ -46,20 +37,18 @@ public class UserService {
             }
             role = UserRoleEnum.ADMIN;
         }
-
-
-        User user = new User(userEmail,nickname,encodedPassword, telecom, cardType, type1, type2, type3, role, true);
-        System.out.println("UserService의 User:"+user.getUserEmail());
-        User savedUser = userRepository.save(user);
-        System.out.println(savedUser.getUserEmail());
-        return new ResponseDto("success","회원가입 성공");
+        User user = new User(signupRequestDto, encodedPassword, role, true);
+        userRepository.save(user);
+        return new ResponseDto("success", "회원가입 성공");
     }
+
     public void checkRedunbancy(String userEmail) {
         Optional<User> found = userRepository.findByUserEmail(userEmail);
         if (found.isPresent()) {
             throw new CustomErrorException("중복된 유저이메일이 존재합니다.");
         }
     }
+
     //로그인
     public User login(String userEmail, String password) {
         User user = userRepository.findByUserEmail(userEmail).orElseThrow(
@@ -72,6 +61,7 @@ public class UserService {
         }
         return user;
     }
+
     //계정삭제
     @Transactional
     public void delete(Long id) {
@@ -83,6 +73,7 @@ public class UserService {
 
         user.statusUser(false);
     }
+
     //계정활성화
     @Transactional
     public void reactivate(Long id) {
