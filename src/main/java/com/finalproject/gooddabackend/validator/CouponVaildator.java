@@ -7,7 +7,7 @@ import static com.finalproject.gooddabackend.validator.URLValidator.isValidUrl;
 
 @Component
 public class CouponVaildator {
-    public static void validateCouponInput(CouponCreateRequestDto couponCreateRequestDto, Long couponLike, String couponImage){
+    public static void validateCouponInput(CouponCreateRequestDto couponCreateRequestDto, String couponImage){
         if (!isValidUrl(couponImage) ){
             throw new IllegalArgumentException("이미지 URL 포맷이 맞지 않습니다.");
         }

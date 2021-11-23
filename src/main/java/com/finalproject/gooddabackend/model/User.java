@@ -2,6 +2,7 @@ package com.finalproject.gooddabackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.finalproject.gooddabackend.dto.user.SignupRequestDto;
+import com.finalproject.gooddabackend.validator.UserVaildator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,19 +59,22 @@ public class User extends Timestamped {
     private boolean status;
 
 
-    public User(String userEmail, String nickname, String password, String telecom, String cardType, String type1, String type2, String type3, UserRoleEnum role, boolean status){
-        this.userEmail = userEmail;
-        this.nickname = nickname;
-        this.password = password;
-        this.telecom = telecom;
-        this.cardType = cardType;
-        this.type1 = type1;
-        this.type2 = type2;
-        this.type3 = type3;
-        this.role = role;
-        this.status = status;
-    }
+//    public User(String userEmail, String nickname, String password, String telecom, String cardType, String type1, String type2, String type3, UserRoleEnum role, boolean status){
+//        this.userEmail = userEmail;
+//        this.nickname = nickname;
+//        this.password = password;
+//        this.telecom = telecom;
+//        this.cardType = cardType;
+//        this.type1 = type1;
+//        this.type2 = type2;
+//        this.type3 = type3;
+//        this.role = role;
+//        this.status = status;
+//    }
+
     public User(SignupRequestDto signupRequestDto, String password, UserRoleEnum role, boolean status){
+        UserVaildator.validateUserInput(signupRequestDto);
+
         this.userEmail = signupRequestDto.getUserEmail();
         this.nickname = signupRequestDto.getNickname();
         this.password = password;
@@ -83,6 +87,8 @@ public class User extends Timestamped {
         this.status = status;
     }
     public void updateUser(String nickname, String telecom, String cardType, String type1, String type2, String type3){
+        UserVaildator.validateUserInput2(nickname);
+
         this.nickname = nickname;
         this.telecom = telecom;
         this.cardType = cardType;

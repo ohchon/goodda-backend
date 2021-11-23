@@ -1,7 +1,6 @@
 package com.finalproject.gooddabackend.model;
 
 import com.finalproject.gooddabackend.dto.coupon.CouponCreateRequestDto;
-import com.finalproject.gooddabackend.dto.coupon.CouponResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponUpdateRequestDto;
 import com.finalproject.gooddabackend.validator.CouponVaildator;
 import lombok.*;
@@ -54,23 +53,23 @@ public class Coupon {
     @Column(nullable = false)
     private Long couponLike;
 
-    public Coupon(String couponBrand, String couponTitle, String couponSubTitle, String couponImage, String couponLogo,  String couponType, String couponDesc,  String couponUrl, LocalDate couponCreate, LocalDate couponDespire, Long couponLike) {
-
-        this.couponBrand = couponBrand;
-        this.couponTitle = couponTitle;
-        this.couponSubTitle= couponSubTitle;
-        this.couponImage = couponImage;
-        this.couponLogo = couponLogo;
-        this.couponType = couponType;
-        this.couponDesc = couponDesc;
-        this.couponUrl = couponUrl;
-        this.couponCreate = couponCreate;
-        this.couponDespire = couponDespire;
-        this.couponLike = couponLike;
-    }
+//    public Coupon(String couponBrand, String couponTitle, String couponSubTitle, String couponImage, String couponLogo,  String couponType, String couponDesc,  String couponUrl, LocalDate couponCreate, LocalDate couponDespire, Long couponLike) {
+//
+//        this.couponBrand = couponBrand;
+//        this.couponTitle = couponTitle;
+//        this.couponSubTitle= couponSubTitle;
+//        this.couponImage = couponImage;
+//        this.couponLogo = couponLogo;
+//        this.couponType = couponType;
+//        this.couponDesc = couponDesc;
+//        this.couponUrl = couponUrl;
+//        this.couponCreate = couponCreate;
+//        this.couponDespire = couponDespire;
+//        this.couponLike = couponLike;
+//    }
 
     public Coupon(CouponCreateRequestDto couponCreateRequestDto, Long couponLike, String couponImage){
-        CouponVaildator.validateCouponInput(couponCreateRequestDto, couponLike, couponImage);
+        CouponVaildator.validateCouponInput(couponCreateRequestDto, couponImage);
 
         this.couponBrand = couponCreateRequestDto.getCouponBrand();
         this.couponTitle = couponCreateRequestDto.getCouponTitle();
