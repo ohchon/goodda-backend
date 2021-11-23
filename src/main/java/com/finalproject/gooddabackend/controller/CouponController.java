@@ -28,13 +28,18 @@ public class CouponController {
 
     //검색기능
     @GetMapping("/api/main/search/{word}")
-    public ResponseDto couponSearch(@PathVariable String word){
-       List<Coupon> searchResult = couponRepository.findAllByCouponBrandContainingIgnoreCaseOrCouponTitleContainingIgnoreCase(word, word);
-       if(searchResult.isEmpty()){
-           return new ResponseDto("failed", "검색한 자료가 없습니다" );
-       }else {
-           return new ResponseDto("success", searchResult);
-       }
+    public ResponseDto couponSearch(@PathVariable String word, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<Coupon> searchResult = couponRepository.findAllByCouponBrandContainingIgnoreCaseOrCouponTitleContainingIgnoreCaseOrCouponSubTitleContainingIgnoreCase(word, word, word);
+        if (searchResult.isEmpty()) {
+            return new ResponseDto("failed", "검색한 자료는 없는 자료입니다");
+        } else {
+            if (userDetails == null) {
+                return couponService.responseRankList(searchResult);
+            } else {
+                Long userId = userDetails.getUser().getId();
+                return couponService.showRankList(userId, searchResult);
+            }
+        }
     }
 
     // 쿠폰 리스트 타입별로
