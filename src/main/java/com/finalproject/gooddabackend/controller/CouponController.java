@@ -26,6 +26,17 @@ public class CouponController {
     private final CouponRepository couponRepository;
     private final CouponService couponService;
 
+    //검색기능
+    @GetMapping("/api/main/search/{word}")
+    public ResponseDto couponSearch(@PathVariable String word){
+       List<Coupon> searchResult = couponRepository.findAllByCouponBrandContainingIgnoreCaseOrCouponTitleContainingIgnoreCase(word, word);
+       if(searchResult.isEmpty()){
+           return new ResponseDto("failed", "검색한 자료가 없습니다" );
+       }else {
+           return new ResponseDto("success", searchResult);
+       }
+    }
+
     // 쿠폰 리스트 타입별로
     @GetMapping("/api/main/{couponType}")
     public ResponseDto couponList(@PathVariable String couponType,
