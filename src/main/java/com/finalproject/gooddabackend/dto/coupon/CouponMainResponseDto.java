@@ -13,6 +13,7 @@ public class CouponMainResponseDto {
     private Long id;
     private String couponBrand;
     private String couponSubTitle;
+    private String couponImage;
     private String couponLogo;
     private String couponType;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
@@ -26,6 +27,7 @@ public class CouponMainResponseDto {
         this.id = coupon.getId();
         this.couponBrand = coupon.getCouponBrand();
         this.couponSubTitle= coupon.getCouponSubTitle();
+        this.couponImage = coupon.getCouponImage();
         this.couponLogo = coupon.getCouponLogo();
         this.couponType = coupon.getCouponType();
         this.couponCreate = coupon.getCouponCreate();
