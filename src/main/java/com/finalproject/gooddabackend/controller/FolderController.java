@@ -33,7 +33,7 @@ public class FolderController {
 
     // 쿠폰 보관함에 추가
     @Operation(summary = "보관함에 추가")
-    @PostMapping("api/folders")
+    @PostMapping("api/folders/create")
     @Transactional
     public ResponseDto addFolder(@Valid @RequestBody FolderRequestDto requestDto, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
         log.info("POST, '/api/folders', couponId={}", requestDto.getCouponId());
@@ -57,7 +57,7 @@ public class FolderController {
     }
 
     // 보관함 조회
-    @GetMapping("/api/folders")
+    @GetMapping("/api/folders/read")
     public FolderResponseDto getFolder(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if(userDetails == null) {
             throw new CustomErrorException("로그인 사용자만 이용가능합니다.");
@@ -68,7 +68,7 @@ public class FolderController {
     }
 
     // 보관 정보 삭제
-    @DeleteMapping("/api/folders/{couponId}")
+    @DeleteMapping("/api/folders/delete/{couponId}")
     public ResponseDto deleteFolder(@PathVariable Long couponId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         folderService.deleteFolder(user, couponId);
