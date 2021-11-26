@@ -12,6 +12,7 @@ import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.repository.CouponRepository;
 import com.finalproject.gooddabackend.repository.FolderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,9 @@ public class CouponService {
     private final FolderRepository folderRepository;
     private final S3Uploader s3Uploader;
     private final AmazonS3Client amazonS3Client;
-    private final String bucket = "good-da-bucket";//손보긴 해야함
+
+    @Value("${aws-bucket-name}")
+    private final String bucket;
 
     //쿠폰생성(관리자)
     public ResponseDto createCoupon(CouponCreateRequestDto couponCreateRequestDto) throws IOException {
