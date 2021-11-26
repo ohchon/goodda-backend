@@ -8,7 +8,6 @@ import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.model.UserRoleEnum;
 import com.finalproject.gooddabackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
