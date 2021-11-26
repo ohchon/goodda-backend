@@ -170,7 +170,8 @@ public class CouponService {
     public ResponseDto responseDetail(Long couponId, Long userId){
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(()->
                 new CustomErrorException("해당 할인정보를 찾을 수 없습니다."));
-        Folder folder = folderRepository.findByUserIdAndCouponId(userId, userId);
+
+        Folder folder = folderRepository.findByUserIdAndCouponId(userId, couponId);
 
         if (folder != null) {
             Long couponSelect = 1L;
