@@ -167,6 +167,27 @@ public class CouponService {
         return couponCount;
     }
 
+    public ResponseDto responseDetail(Long couponId, Long userId){
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(()->
+                new CustomErrorException("해당 할인정보를 찾을 수 없습니다."));
+        Folder folder = folderRepository.findByUserIdAndCouponId(userId, userId);
+
+        if (folder != null) {
+            Long couponSelect = 1L;
+            CouponDetailResponseDto couponDetailResponseDto = new CouponDetailResponseDto(coupon, couponSelect);
+            return new ResponseDto("success", couponDetailResponseDto);
+        } else {
+            Long couponSelect = 0L;
+            CouponDetailResponseDto couponDetailResponseDto = new CouponDetailResponseDto(coupon, couponSelect);
+            return new ResponseDto("success", couponDetailResponseDto);
+        }
+    }
+    public ResponseDto responseDetail1(Long couponId){
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(()->
+                new CustomErrorException("해당 할인정보를 찾을 수 없습니다."));
+        return new ResponseDto("success", coupon);
+    }
+
 
 }
 

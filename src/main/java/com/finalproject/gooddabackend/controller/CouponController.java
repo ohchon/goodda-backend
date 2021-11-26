@@ -4,7 +4,6 @@ package com.finalproject.gooddabackend.controller;
 import com.finalproject.gooddabackend.dto.ResponseDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponCreateRequestDto;
 import com.finalproject.gooddabackend.dto.coupon.CouponUpdateRequestDto;
-import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.Coupon;
 import com.finalproject.gooddabackend.model.UserRoleEnum;
 import com.finalproject.gooddabackend.repository.CouponRepository;
@@ -57,10 +56,13 @@ public class CouponController {
 
     // 해당 id 쿠폰 주기
     @GetMapping("/api/detail/{couponId}")
-    public ResponseDto idCoupon(@PathVariable Long couponId) {
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(()->
-                new CustomErrorException("해당 할인정보를 찾을 수 없습니다."));
-        return new ResponseDto("success", coupon);
+    public ResponseDto idCoupon(@PathVariable Long couponId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails==null){
+            return couponService.responseDetail1(couponId);
+        }else{
+        Long userId = userDetails.getUser().getId();
+        return couponService.responseDetail(couponId, userId);
+        }
     }
 
     //쿠폰순위
