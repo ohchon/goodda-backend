@@ -25,6 +25,10 @@ public class Folder {
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
+    public Folder(User user, Coupon coupon){
+        this.user = user;
+        this.coupon = coupon;
+    }
     public void addNewFolder(User user, Coupon coupon) {
         this.user = user;
         this.coupon = coupon;

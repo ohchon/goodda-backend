@@ -33,11 +33,11 @@ public class FolderService {
     // 보관함 내용 삭제
     @Transactional
     public void deleteFolder(User user, Long couponId) {
+        Coupon coupon = loadCoupon(couponId);
         Folder folder = folderRepository.findAllByUserIdAndCouponId(user.getId(), couponId);
         folder.deleteFolder();
         folderRepository.delete(folder);
         //쿠폰찜숫자 바꾸기
-        Coupon coupon = loadCoupon(couponId);
         Long couponLike = coupon.getCouponLike();
         Long couponLikes = couponLike-1;
         coupon.setCouponLike(couponLikes);

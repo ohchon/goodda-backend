@@ -44,8 +44,7 @@ public class FolderController {
         Coupon coupon = folderService.loadCoupon(requestDto.getCouponId());
         Folder folder = folderRepository.findAllByUserIdAndCouponId(user.getId(), requestDto.getCouponId());
         if (folder == null) {
-            folder = new Folder();
-            folder.addNewFolder(user, coupon);
+            folder = new Folder(user, coupon);
             folderRepository.save(folder);
             Long couponLike = coupon.getCouponLike();
             Long couponLikes = couponLike+1;
@@ -72,6 +71,6 @@ public class FolderController {
     public ResponseDto deleteFolder(@PathVariable Long couponId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         folderService.deleteFolder(user, couponId);
-        return new ResponseDto("success", "");
+        return new ResponseDto("success", "삭제성공");
     }
 }
