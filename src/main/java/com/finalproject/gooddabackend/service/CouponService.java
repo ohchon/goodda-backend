@@ -34,9 +34,7 @@ public class CouponService {
     private final FolderRepository folderRepository;
     private final S3Uploader s3Uploader;
     private final AmazonS3Client amazonS3Client;
-
-    @Value("${aws-bucket-name}")
-    private final String bucket;
+    private final String bucket = "good-da-bucket";
 
     //쿠폰생성(관리자)
     public ResponseDto createCoupon(CouponCreateRequestDto couponCreateRequestDto) throws IOException {
