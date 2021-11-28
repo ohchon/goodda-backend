@@ -12,7 +12,6 @@ import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.repository.CouponRepository;
 import com.finalproject.gooddabackend.repository.FolderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -108,8 +107,6 @@ public class CouponService {
         Page<Coupon> couponList = couponRepository.findAllByCouponTypeAndCouponDespireAfter(couponType, now, pageable);
         return showList(userId, couponList);
     }
-
-
     public ResponseDto showList(Long userId, Page<Coupon> couponList) {
 
         List<CouponMainResponseDto> couponResponseDtoList = new ArrayList<>();
@@ -127,6 +124,36 @@ public class CouponService {
         }
         return new ResponseDto("success", couponResponseDtoList);
     }
+
+
+
+
+    public ResponseDto responseList11(String couponType, int page, int size, String sortBy, boolean isAsc){
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        LocalDate now = LocalDate.now();
+        Page<Coupon> couponList = couponRepository.findAllByCouponTypeAndCouponDespireAfter(couponType, now, pageable);
+        return showList11(couponList);
+    }
+    public ResponseDto showList11(Page<Coupon> couponList) {
+
+        List<CouponMainResponseDto> couponResponseDtoList = new ArrayList<>();
+        for (Coupon coupon : couponList) {
+                Long couponSelect = 0L;
+                CouponMainResponseDto newCouponDto = new CouponMainResponseDto(coupon, couponSelect);
+                couponResponseDtoList.add(newCouponDto);
+        }
+        return new ResponseDto("success", couponResponseDtoList);
+    }
+
+
+
+
+
+
+
 
 //랭크보여주기 + 유저찜기록
     public ResponseDto showRankList(Long userId, List<Coupon> couponList) {

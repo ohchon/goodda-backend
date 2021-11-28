@@ -49,9 +49,13 @@ public class CouponController {
                                   @RequestParam("sortBy") String sortBy,
                                   @RequestParam("isAsc") boolean isAsc,
                                   @AuthenticationPrincipal UserDetailsImpl userDetails){
-        Long userId = userDetails.getUser().getId();
         page = page - 1;
-        return couponService.responseList1(couponType, userId, page, size, sortBy, isAsc);
+        if(userDetails==null){
+            return couponService.responseList11(couponType, page, size, sortBy, isAsc);
+        }else{
+            Long userId = userDetails.getUser().getId();
+            return couponService.responseList1(couponType, userId, page, size, sortBy, isAsc);
+        }
     }
 
     // 해당 id 쿠폰 주기

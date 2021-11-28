@@ -54,4 +54,13 @@ public class Scheduler {
         System.out.println("쿠폰삭제끝");
         System.out.println("스케쥴끝");
     }
+    @Scheduled(cron = "0 0 0 1 * *", zone = "Asia/Seoul")
+    @Transactional
+    public void countCouponLikeBySchedule() {
+        List<Coupon> allCoupons = couponRepository.findAll();
+        for(Coupon coupon: allCoupons){
+            Long couponLikes = folderRepository.countByCouponId(coupon.getId());
+            coupon.setCouponLike(couponLikes);
+        }
+    }
 }
