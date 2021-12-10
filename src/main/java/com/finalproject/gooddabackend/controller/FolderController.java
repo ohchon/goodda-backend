@@ -62,7 +62,8 @@ public class FolderController {
             throw new CustomErrorException("로그인 사용자만 이용가능합니다.");
         }
         User user = userDetails.getUser();
-        return folderService.getCoupon(user);
+        Long userId = user.getId();
+        return folderService.getCoupon(userId);
         // 쿠폰함에 있는 정보 다 불러오기
     }
 

@@ -8,7 +8,6 @@ import com.finalproject.gooddabackend.dto.coupon.*;
 import com.finalproject.gooddabackend.exception.CustomErrorException;
 import com.finalproject.gooddabackend.model.Coupon;
 import com.finalproject.gooddabackend.model.Folder;
-import com.finalproject.gooddabackend.model.User;
 import com.finalproject.gooddabackend.repository.CouponRepository;
 import com.finalproject.gooddabackend.repository.FolderRepository;
 import lombok.RequiredArgsConstructor;
@@ -182,14 +181,14 @@ public class CouponService {
         return new ResponseDto("success", couponResponseDtoList);
     }
     //보관함안 마감임박쿠폰개수 보여주기
-    public Long couponAlert(User user){
+    public Long couponAlert(Long userId){
         LocalDate now = LocalDate.now();
-        List<Folder> folderList = folderRepository.findAllByUser(user);
+        List<Folder> folderList = folderRepository.findAllByUserId(userId);
         Long couponCount = 0L;
         for(Folder folder: folderList){
             Coupon coupon = folder.getCoupon();
-            if(coupon.getCouponDespire()==now){
-                ++couponCount;
+            if(coupon.getCouponDespire().isEqual(now)){
+                couponCount++;
             }
         }
         return couponCount;

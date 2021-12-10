@@ -46,8 +46,8 @@ public class FolderService {
 
 
     //보관함 조희
-    public FolderResponseDto getCoupon(User user) {
-       List<Folder> folderList = folderRepository.findAllByUser(user);
+    public FolderResponseDto getCoupon(Long userId) {
+       List<Folder> folderList = folderRepository.findAllByUserId(userId);
 
        List<CouponResponseDto> couponList = new ArrayList<>();
         for(Folder folder: folderList){
