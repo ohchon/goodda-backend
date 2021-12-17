@@ -32,7 +32,7 @@ public class CouponService {
     private final FolderRepository folderRepository;
     private final S3Uploader s3Uploader;
     private final AmazonS3Client amazonS3Client;
-    private final String bucket = "good-da-bucket";
+    private final String bucket = "good-da-bucket";// 이거 어플리케이션 프로퍼티에 숨긱자
 
     //쿠폰생성(관리자)
     public ResponseDto createCoupon(CouponCreateRequestDto couponCreateRequestDto) throws IOException {
@@ -215,8 +215,6 @@ public class CouponService {
                 new CustomErrorException("해당 할인정보를 찾을 수 없습니다."));
         return new ResponseDto("success", coupon);
     }
-
-
 }
 
 

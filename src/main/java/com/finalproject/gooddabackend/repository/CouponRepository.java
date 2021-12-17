@@ -15,4 +15,5 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> findAllByCouponDespireBefore(LocalDate despireDay);
     void deleteAllByCouponDespireBefore(LocalDate despireDay);
     List<Coupon> findAllByCouponBrandContainingIgnoreCaseOrCouponTitleContainingIgnoreCaseOrCouponSubTitleContainingIgnoreCase(String word, String word2, String word3);
+    List<Coupon> findAllByCouponDespire(LocalDate now);
 }

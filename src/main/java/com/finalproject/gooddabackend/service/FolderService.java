@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,8 +53,16 @@ public class FolderService {
        List<CouponResponseDto> couponList = new ArrayList<>();
         for(Folder folder: folderList){
             Coupon coupon = folder.getCoupon();
-            CouponResponseDto couponResponseDto = new CouponResponseDto(coupon);
-            couponList.add(couponResponseDto);
+            LocalDate now = LocalDate.now();
+            if(coupon.getCouponDespire().isEqual(now)){
+                int couponAlert = 1;
+                CouponResponseDto couponResponseDto = new CouponResponseDto(coupon, couponAlert);
+                couponList.add(couponResponseDto);
+            }else{
+                int couponAlert = 0;
+                CouponResponseDto couponResponseDto = new CouponResponseDto(coupon, couponAlert);
+                couponList.add(couponResponseDto);
+            }
         }
         Collections.sort(couponList);
         return new FolderResponseDto(couponList);

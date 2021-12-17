@@ -26,13 +26,16 @@ public class CouponResponseDto implements Comparable<CouponResponseDto> {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate couponDespire;
 
-    public CouponResponseDto(Coupon coupon) {
+    private int couponAlert;
+
+    public CouponResponseDto(Coupon coupon, int couponAlert) {
         this.id = coupon.getId();
         this.couponBrand = coupon.getCouponBrand();
         this.couponSubTitle = coupon.getCouponSubTitle();
         this.couponLogo = coupon.getCouponLogo();
         this.couponCreate = coupon.getCouponCreate();
         this.couponDespire = coupon.getCouponDespire();
+        this.couponAlert = couponAlert;
     }
 @Override
 public int compareTo(CouponResponseDto o) {

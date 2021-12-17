@@ -83,6 +83,18 @@ public class CouponController {
             return couponService.showRankList(userId, couponList);
         }
     }
+    @GetMapping("/todayCoupons")
+    public ResponseDto todayCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        LocalDate now = LocalDate.now();
+        List<Coupon> couponList = couponRepository.findAllByCouponDespire(now);
+        if(userDetails == null) {
+            return couponService.responseRankList(couponList);
+        } else {
+            Long userId = userDetails.getUser().getId();
+            return couponService.showRankList(userId, couponList);
+        }
+    }
+
 
     // (관리자용) 쿠폰 리스트
     @Secured(value = UserRoleEnum.Authority.ADMIN)
