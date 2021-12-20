@@ -54,13 +54,20 @@ public class FolderService {
         for(Folder folder: folderList){
             Coupon coupon = folder.getCoupon();
             LocalDate now = LocalDate.now();
-            if(coupon.getCouponDespire().isEqual(now)){
+            if (coupon.getCouponDespire().isBefore(now)){
+                int finishedCoupon = 1;
+                int couponAlert = 0;
+                CouponResponseDto couponResponseDto = new CouponResponseDto(coupon, couponAlert, finishedCoupon);
+                couponList.add(couponResponseDto);
+            }else if(coupon.getCouponDespire().isEqual(now)){
+                int finishedCoupon = 0;
                 int couponAlert = 1;
-                CouponResponseDto couponResponseDto = new CouponResponseDto(coupon, couponAlert);
+                CouponResponseDto couponResponseDto = new CouponResponseDto(coupon, couponAlert, finishedCoupon);
                 couponList.add(couponResponseDto);
             }else{
+                int finishedCoupon = 0;
                 int couponAlert = 0;
-                CouponResponseDto couponResponseDto = new CouponResponseDto(coupon, couponAlert);
+                CouponResponseDto couponResponseDto = new CouponResponseDto(coupon, couponAlert, finishedCoupon);
                 couponList.add(couponResponseDto);
             }
         }

@@ -49,7 +49,7 @@
 //        userRepository.deleteAllByStatusAndModifiedAtBefore(false, finalDay);
 //    }
 //
-//    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+//    @Scheduled(cron = "0 0 10 * * *", zone = "Asia/Seoul")
 //    @Transactional
 //    public void deleteCouponBySchedule() {
 //         LocalDate now = LocalDate.now();
@@ -72,7 +72,7 @@
 //            throw new AmazonServiceException(e.getMessage());
 //        }
 //    }
-//    @Scheduled(cron = "0 0 0 1 * *", zone = "Asia/Seoul")
+//    @Scheduled(cron = "0 0 20 1 * *", zone = "Asia/Seoul")
 //    @Transactional
 //    public void countCouponLikeBySchedule() {
 //        List<Coupon> allCoupons = couponRepository.findAll();

@@ -28,7 +28,9 @@ public class CouponResponseDto implements Comparable<CouponResponseDto> {
 
     private int couponAlert;
 
-    public CouponResponseDto(Coupon coupon, int couponAlert) {
+    private int finishedCoupon;
+
+    public CouponResponseDto(Coupon coupon, int couponAlert, int finishedCoupon) {
         this.id = coupon.getId();
         this.couponBrand = coupon.getCouponBrand();
         this.couponSubTitle = coupon.getCouponSubTitle();
@@ -36,6 +38,7 @@ public class CouponResponseDto implements Comparable<CouponResponseDto> {
         this.couponCreate = coupon.getCouponCreate();
         this.couponDespire = coupon.getCouponDespire();
         this.couponAlert = couponAlert;
+        this.finishedCoupon = finishedCoupon;
     }
 @Override
 public int compareTo(CouponResponseDto o) {
