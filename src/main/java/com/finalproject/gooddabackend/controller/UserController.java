@@ -142,6 +142,7 @@ public class UserController {
                 showUser.getRole()
         );
         return new ResponseDto("success",userShowResponseDto);
+
     }
 
 //유저활성화
